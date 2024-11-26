@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>XLanguage Chat Interface</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="chat-container">
+        <div class="header">
+            <h1>XLanguage</h1>
+        </div>
+
+        <!-- Language Selector -->
+        <div class="language-selector">
+            <div class="selected-language" onclick="toggleLanguagePanel(event)">
+                <i class="fas fa-language"></i>
+                <span id="current-language">English</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+
+            <!-- Language Selection Panel -->
+            <div id="languagePanel" class="language-panel">
+                <!-- Tabs -->
+                <div class="language-tabs">
+                    <button class="tab-button active" onclick="switchTab('european', event)">
+                        <i class="fas fa-globe-europe"></i> European
+                    </button>
+                    <button class="tab-button" onclick="switchTab('asian', event)">
+                        <i class="fas fa-globe-asia"></i> Asian
+                    </button>
+                    <button class="tab-button" onclick="switchTab('middleEastern', event)">
+                        <i class="fas fa-mosque"></i> Middle East
+                    </button>
+                    <button class="tab-button" onclick="switchTab('african', event)">
+                        <i class="fas fa-globe-africa"></i> African
+                    </button>
+                    <button class="tab-button" onclick="switchTab('other', event)">
+                        <i class="fas fa-globe"></i> Other
+                    </button>
+                </div>
+
+                <!-- Tab Contents -->
+                <div class="tab-contents">
+                    <!-- European Languages -->
+                    <div id="european" class="tab-content active">
+                        <div class="language-grid">
+                            <button onclick="selectLanguage('English', event)" class="selected">
+                                <span>🇬🇧</span> English
+                            </button>
+                            <button onclick="selectLanguage('Spanish', event)">
+                                <span>🇪🇸</span> Spanish
+                            </button>
+                            <button onclick="selectLanguage('French', event)">
+                                <span>🇫🇷</span> French
+                            </button>
+                            <button onclick="selectLanguage('German', event)">
+                                <span>🇩🇪</span> German
+                            </button>
+                            <button onclick="selectLanguage('Italian', event)">
+                                <span>🇮🇹</span> Italian
+                            </button>
+                            <button onclick="selectLanguage('Portuguese', event)">
+                                <span>🇵🇹</span> Portuguese
+                            </button>
+                            <button onclick="selectLanguage('Russian', event)">
+                                <span>🇷🇺</span> Russian
+                            </button>
+                            <button onclick="selectLanguage('Dutch', event)">
+                                <span>🇳🇱</span> Dutch
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Asian Languages -->
+                    <div id="asian" class="tab-content">
+                        <div class="language-grid">
+                            <button onclick="selectLanguage('Chinese', event)">
+                                <span>🇨🇳</span> Chinese
+                            </button>
+                            <button onclick="selectLanguage('Japanese', event)">
+                                <span>🇯🇵</span> Japanese
+                            </button>
+                            <button onclick="selectLanguage('Korean', event)">
+                                <span>🇰🇷</span> Korean
+                            </button>
+                            <button onclick="selectLanguage('Hindi', event)">
+                                <span>🇮🇳</span> Hindi
+                            </button>
+                            <button onclick="selectLanguage('Bengali', event)">
+                                <span>🇧🇩</span> Bengali
+                            </button>
+                            <button onclick="selectLanguage('Thai', event)">
+                                <span>🇹🇭</span> Thai
+                            </button>
+                            <button onclick="selectLanguage('Vietnamese', event)">
+                                <span>🇻🇳</span> Vietnamese
+                            </button>
+                            <button onclick="selectLanguage('Tamil', event)">
+                                <span>🇮🇳</span> Tamil
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Middle Eastern Languages -->
+                    <div id="middleEastern" class="tab-content">
+                        <div class="language-grid">
+                            <button onclick="selectLanguage('Arabic', event)">
+                                <span>🇸🇦</span> Arabic
+                            </button>
+                            <button onclick="selectLanguage('Hebrew', event)">
+                                <span>🇮🇱</span> Hebrew
+                            </button>
+                            <button onclick="selectLanguage('Persian', event)">
+                                <span>🇮🇷</span> Persian
+                            </button>
+                            <button onclick="selectLanguage('Turkish', event)">
+                                <span>🇹🇷</span> Turkish
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- African Languages -->
+                    <div id="african" class="tab-content">
+                        <div class="language-grid">
+                            <button onclick="selectLanguage('Swahili', event)">
+                                <span>🇹🇿</span> Swahili
+                            </button>
+                            <button onclick="selectLanguage('Amharic', event)">
+                                <span>🇪🇹</span> Amharic
+                            </button>
+                            <button onclick="selectLanguage('Zulu', event)">
+                                <span>🇿🇦</span> Zulu
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Other Languages -->
+                    <div id="other" class="tab-content">
+                        <div class="language-grid">
+                            <button onclick="selectLanguage('Brazilian Portuguese', event)">
+                                <span>🇧🇷</span> Brazilian Portuguese
+                            </button>
+                            <button onclick="selectLanguage('Canadian French', event)">
+                                <span>🇨🇦</span> Canadian French
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Interface -->
+        <div class="chat-messages" id="chat-messages"></div>
+        <div class="loading" id="loading">
+            <div class="loading-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="loading-text">XLanguage is thinking...</div>
+        </div>
+        <div class="input-container">
+            <input type="text" id="message-input" placeholder="Type your message...">
+            <button id="send-button">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+</body>
+</html>
