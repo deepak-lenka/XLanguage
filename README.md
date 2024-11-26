@@ -35,8 +35,6 @@ XLanguage is a sophisticated multilingual chat interface that leverages the powe
 ```bash
 git clone https://github.com/deepak-lenka/XLanguage.git
 cd XLanguage
-# Navigate to the project directory
-cd project
 
 # Run the Flask application
 flask run
