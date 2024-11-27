@@ -1,11 +1,6 @@
-# XLanguage - Multilingual Chat Interface
+# XLanguage - Multilingual Chat 
 
-<div align="center">
-  <img src="https://img.shields.io/badge/Python-3.8+-blue.svg"/>
-  <img src="https://img.shields.io/badge/Flask-2.0+-green.svg"/>
-  <img src="https://img.shields.io/badge/X.AI-Powered-orange.svg"/>
-  <img src="https://img.shields.io/badge/License-MIT-yellow.svg"/>
-</div>
+
 
 ## 🌍 Overview
 
