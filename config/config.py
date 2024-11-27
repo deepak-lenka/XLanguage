@@ -1,2 +1,2 @@
-XAI_API_KEY = "your-api-key-here"
+XAI_API_KEY = "xai-vOcD8OE0jA06Nf0VfCVhZQqeFFGY1t8C7p1CEEmDu5LNnaiK6jvokACEnLoZ3q7YyQpRQhlN2BcIYNu1"
 

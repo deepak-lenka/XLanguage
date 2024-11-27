@@ -6,6 +6,7 @@
     --accent-color: #1a8cff;
     --hover-color: #0066cc;
     --border-color: #333;
+    --focus-color: #ffbf47; /* Added focus color for better accessibility */
 }
 
 /* Base Styles */
@@ -16,15 +17,20 @@ body {
     background-color: var(--background-dark);
     color: var(--text-color);
     height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .chat-container {
     max-width: 1200px;
+    width: 100%;
     margin: 0 auto;
     padding: 20px;
-    height: 100vh;
+    height: 100%;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
 }
 
 /* Header */
@@ -56,7 +62,8 @@ body {
     transition: background-color 0.3s;
 }
 
-.selected-language:hover {
+.selected-language:hover,
+.selected-language:focus {
     background-color: var(--background-lightest);
 }
 
@@ -117,7 +124,8 @@ body {
     gap: 8px;
 }
 
-.tab-button:hover {
+.tab-button:hover,
+.tab-button:focus {
     background-color: var(--accent-color);
 }
 
@@ -160,7 +168,8 @@ body {
     gap: 8px;
 }
 
-.language-grid button:hover {
+.language-grid button:hover,
+.language-grid button:focus {
     background-color: var(--accent-color);
     transform: translateY(-2px);
 }
@@ -177,6 +186,8 @@ body {
     background-color: var(--background-lighter);
     border-radius: 12px;
     margin: 20px 0;
+    display: flex;
+    flex-direction: column;
 }
 
 .message {
@@ -216,6 +227,7 @@ body {
     border-radius: 8px;
     color: var(--text-color);
     font-size: 16px;
+    transition: box-shadow 0.3s;
 }
 
 #message-input:focus {
@@ -233,7 +245,8 @@ body {
     transition: background-color 0.3s;
 }
 
-#send-button:hover {
+#send-button:hover,
+#send-button:focus {
     background-color: var(--hover-color);
 }
 
@@ -291,5 +304,9 @@ body {
     .tab-button {
         padding: 8px 12px;
         font-size: 14px;
+    }
+
+    .chat-container {
+        padding: 10px;
     }
 }

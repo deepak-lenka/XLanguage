@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // Initialize variables
     const messageInput = document.getElementById('message-input');
     const sendButton = document.getElementById('send-button');
@@ -6,20 +6,20 @@ document.addEventListener('DOMContentLoaded', function() {
     const loadingIndicator = document.getElementById('loading');
     const languagePanel = document.getElementById('languagePanel');
     const selectedLanguageDiv = document.querySelector('.selected-language');
-    
+
     let isProcessing = false;
     let currentLanguage = 'English';
     let isPanelOpen = false;
 
     // Language Panel Toggle
-    window.toggleLanguagePanel = function(event) {
+    window.toggleLanguagePanel = function (event) {
         event.stopPropagation(); // Prevent event bubbling
         isPanelOpen = !isPanelOpen;
-        
+
         // Toggle panel visibility
         languagePanel.classList.toggle('active');
         selectedLanguageDiv.classList.toggle('active');
-        
+
         // Add/remove click outside listener
         if (isPanelOpen) {
             document.addEventListener('click', handleClickOutside);
@@ -29,9 +29,9 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     // Tab Switching
-    window.switchTab = function(tabId, event) {
+    window.switchTab = function (tabId, event) {
         event.stopPropagation(); // Prevent event bubbling
-        
+
         // Remove active class from all tabs and contents
         document.querySelectorAll('.tab-button').forEach(tab => {
             tab.classList.remove('active');
@@ -46,9 +46,9 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     // Language Selection
-    window.selectLanguage = function(language, event) {
+    window.selectLanguage = function (language, event) {
         event.stopPropagation(); // Prevent event bubbling
-        
+
         // Update current language
         currentLanguage = language;
         document.getElementById('current-language').textContent = language;
@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.language-grid button').forEach(btn => {
             btn.classList.remove('selected');
         });
-        
+
         const selectedButton = event.currentTarget;
         selectedButton.classList.add('selected');
 
@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Handle click outside
     function handleClickOutside(event) {
-        if (!languagePanel.contains(event.target) && 
+        if (!languagePanel.contains(event.target) &&
             !selectedLanguageDiv.contains(event.target)) {
             closeLanguagePanel();
         }
@@ -93,10 +93,9 @@ document.addEventListener('DOMContentLoaded', function() {
     function addMessage(text, isUser) {
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
-        
-        // Add typing effect for bot messages
+
         if (!isUser) {
-            typeMessage(messageDiv, text);
+            messageDiv.innerHTML = formatAIResponse(text); // Render formatted response
         } else {
             messageDiv.textContent = text;
         }
@@ -109,7 +108,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function typeMessage(element, text) {
         let index = 0;
         element.textContent = '';
-        
+
         function type() {
             if (index < text.length) {
                 element.textContent += text.charAt(index);
@@ -118,7 +117,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 setTimeout(type, 20);
             }
         }
-        
+
         type();
     }
 
@@ -132,6 +131,32 @@ document.addEventListener('DOMContentLoaded', function() {
         loadingIndicator.classList.toggle('active', show);
     }
 
+    // Enhanced formatAIResponse function
+    function formatAIResponse(response) {
+        // Split the response into paragraphs
+        const paragraphs = response.split('\n\n').filter(paragraph => paragraph.trim() !== '');
+
+        // Create a container to hold the formatted response
+        let formattedResponse = '<div class="formatted-response">';
+
+        paragraphs.forEach(paragraph => {
+            // Split paragraph into lines
+            const lines = paragraph.split('\n').filter(line => line.trim() !== '');
+
+            lines.forEach(line => {
+                // Replace **text** with <strong>text</strong>
+                const formattedLine = line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+                // Add the formatted line to the response
+                formattedResponse += `<div class="response-item">${formattedLine.trim()}</div>`;
+            });
+        });
+
+        formattedResponse += '</div>';
+
+        return formattedResponse;
+    }
+
     // Send message
     async function sendMessage() {
         if (isProcessing) return;
@@ -142,7 +167,7 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             isProcessing = true;
             showLoading(true);
-            
+
             // Add user message to chat
             addMessage(message, true);
             messageInput.value = '';
@@ -179,7 +204,7 @@ document.addEventListener('DOMContentLoaded', function() {
         } finally {
             isProcessing = false;
             showLoading(false);
-            
+
             // Re-enable input
             messageInput.disabled = false;
             sendButton.disabled = false;
@@ -190,7 +215,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Event Listeners
     sendButton.addEventListener('click', sendMessage);
 
-    messageInput.addEventListener('keypress', function(e) {
+    messageInput.addEventListener('keypress', function (e) {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
             sendMessage();
@@ -198,14 +223,14 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Close panel on escape key
-    document.addEventListener('keydown', function(e) {
+    document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape' && isPanelOpen) {
             closeLanguagePanel();
         }
     });
 
     // Handle window resize
-    window.addEventListener('resize', function() {
+    window.addEventListener('resize', function () {
         if (window.innerWidth <= 768 && isPanelOpen) {
             closeLanguagePanel();
         }
@@ -215,17 +240,17 @@ document.addEventListener('DOMContentLoaded', function() {
     messageInput.focus();
 
     // Prevent panel close when clicking inside
-    languagePanel.addEventListener('click', function(event) {
+    languagePanel.addEventListener('click', function (event) {
         event.stopPropagation();
     });
 
     // Add touch events for mobile
     let touchStartY = 0;
-    languagePanel.addEventListener('touchstart', function(e) {
+    languagePanel.addEventListener('touchstart', function (e) {
         touchStartY = e.touches[0].clientY;
     });
 
-    languagePanel.addEventListener('touchmove', function(e) {
+    languagePanel.addEventListener('touchmove', function (e) {
         const touchY = e.touches[0].clientY;
         const diff = touchStartY - touchY;
 
