@@ -207,23 +207,86 @@ body {
 }
 
 .message {
-    margin: 10px 0;
-    padding: 15px;
-    border-radius: 12px;
-    max-width: 70%;
+    margin: 10px;
+    padding: 10px 15px;
+    border-radius: 10px;
+    max-width: 80%;
+    position: relative;
     animation: fadeIn 0.3s ease;
 }
 
+.message-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+    font-size: 0.8em;
+    opacity: 0.7;
+}
+
 .user-message {
-    background-color: var(--accent-color);
+    background-color: #1a8cff;
     color: white;
     margin-left: auto;
 }
 
+.user-message .message-header {
+    color: rgba(255, 255, 255, 0.8);
+}
+
 .bot-message {
-    background-color: var(--background-lightest);
+    background-color: #2d2d2d;
     color: white;
     margin-right: auto;
+}
+
+.bot-message .message-header {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.message-content {
+    word-wrap: break-word;
+    line-height: 1.4;
+}
+
+.bot-message .message-content,
+.user-message .message-content {
+    color: white;
+}
+
+.copy-button {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.8);
+    opacity: 0.6;
+    cursor: pointer;
+    padding: 4px;
+    font-size: 0.9em;
+    transition: opacity 0.3s ease;
+}
+
+.copy-button:hover {
+    opacity: 1;
+}
+
+.message-content code {
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-family: monospace;
+}
+
+.message-content pre {
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    border-radius: 4px;
+    overflow-x: auto;
+    margin: 8px 0;
+}
+
+.message-content ul, .message-content ol {
+    margin: 8px 0;
+    padding-left: 20px;
 }
 
 /* Input Area */

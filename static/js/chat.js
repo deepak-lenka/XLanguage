@@ -94,14 +94,71 @@ document.addEventListener('DOMContentLoaded', function () {
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
 
+        // Only add header for bot messages
         if (!isUser) {
-            messageDiv.innerHTML = formatAIResponse(text); // Render formatted response
-        } else {
-            messageDiv.textContent = text;
+            // Create message header
+            const messageHeader = document.createElement('div');
+            messageHeader.className = 'message-header';
+
+            // Add timestamp
+            const timestamp = document.createElement('span');
+            timestamp.className = 'timestamp';
+            timestamp.textContent = new Date().toLocaleTimeString();
+            messageHeader.appendChild(timestamp);
+
+            // Add copy button
+            const messageActions = document.createElement('div');
+            messageActions.className = 'message-actions';
+            
+            const copyButton = document.createElement('button');
+            copyButton.className = 'copy-button';
+            copyButton.innerHTML = '<i class="fas fa-copy"></i>';
+            copyButton.title = 'Copy message';
+            copyButton.onclick = () => copyMessage(text);
+            
+            messageActions.appendChild(copyButton);
+            messageHeader.appendChild(messageActions);
+
+            messageDiv.appendChild(messageHeader);
         }
+
+        // Add message content
+        const messageContent = document.createElement('div');
+        messageContent.className = 'message-content';
+        
+        if (isUser) {
+            messageContent.textContent = text;
+        } else {
+            // Format bot response
+            messageContent.innerHTML = formatAIResponse(text);
+        }
+        messageDiv.appendChild(messageContent);
 
         chatMessages.appendChild(messageDiv);
         scrollToBottom();
+    }
+
+    // Copy message to clipboard with formatting removed
+    function copyMessage(text) {
+        // Remove HTML tags for copying
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = text;
+        const plainText = tempDiv.textContent || tempDiv.innerText;
+
+        navigator.clipboard.writeText(plainText).then(() => {
+            // Show temporary success message
+            const copyButton = event.currentTarget;
+            const originalHTML = copyButton.innerHTML;
+            copyButton.innerHTML = '<i class="fas fa-check"></i>';
+            copyButton.style.color = '#4CAF50';
+            
+            setTimeout(() => {
+                copyButton.innerHTML = originalHTML;
+                copyButton.style.color = '';
+            }, 2000);
+        }).catch(err => {
+            console.error('Failed to copy text: ', err);
+        });
     }
 
     // Typing effect for bot messages
