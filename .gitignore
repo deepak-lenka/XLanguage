@@ -17,5 +17,5 @@ env/
 # IDE specific files
 .vscode/
 .idea/
-*.swp
+*.swpw
 .DS_Store
