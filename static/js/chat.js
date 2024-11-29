@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function () {
             copyButton.className = 'copy-button';
             copyButton.innerHTML = '<i class="fas fa-copy"></i>';
             copyButton.title = 'Copy message';
-            copyButton.onclick = () => copyMessage(text);
+            copyButton.onclick = (event) => copyMessage(text, event);
             
             messageActions.appendChild(copyButton);
             messageHeader.appendChild(messageActions);
@@ -139,14 +139,34 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Copy message to clipboard with formatting removed
-    function copyMessage(text) {
-        // Remove HTML tags for copying
-        const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = text;
-        const plainText = tempDiv.textContent || tempDiv.innerText;
+    async function copyMessage(text, event) {
+        try {
+            const messageContent = event.currentTarget.closest('.message').querySelector('.message-content');
+            const textToCopy = [];
+            
+            // Collect all response items
+            messageContent.querySelectorAll('.response-item').forEach(item => {
+                // Use the original text stored in data attribute
+                const originalText = item.getAttribute('data-original-text') || item.textContent;
+                textToCopy.push(originalText.trim());
+            });
 
-        navigator.clipboard.writeText(plainText).then(() => {
-            // Show temporary success message
+            // Join all lines with proper spacing
+            const finalText = textToCopy.join('\n');
+            
+            // Create a temporary textarea
+            const textarea = document.createElement('textarea');
+            textarea.value = finalText;
+            textarea.style.position = 'absolute';
+            textarea.style.left = '-9999px';
+            document.body.appendChild(textarea);
+            
+            // Select and copy the text
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+
+            // Show success feedback
             const copyButton = event.currentTarget;
             const originalHTML = copyButton.innerHTML;
             copyButton.innerHTML = '<i class="fas fa-check"></i>';
@@ -156,9 +176,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 copyButton.innerHTML = originalHTML;
                 copyButton.style.color = '';
             }, 2000);
-        }).catch(err => {
+        } catch (err) {
             console.error('Failed to copy text: ', err);
-        });
+            // Show error feedback
+            const copyButton = event.currentTarget;
+            const originalHTML = copyButton.innerHTML;
+            copyButton.innerHTML = '<i class="fas fa-times"></i>';
+            copyButton.style.color = '#ff0000';
+            
+            setTimeout(() => {
+                copyButton.innerHTML = originalHTML;
+                copyButton.style.color = '';
+            }, 2000);
+        }
     }
 
     // Typing effect for bot messages
@@ -204,8 +234,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Replace **text** with <strong>text</strong>
                 const formattedLine = line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
 
-                // Add the formatted line to the response
-                formattedResponse += `<div class="response-item">${formattedLine.trim()}</div>`;
+                // Add the formatted line to the response with data attribute for copying
+                formattedResponse += `<div class="response-item" data-original-text="${line.trim()}">${formattedLine.trim()}</div>`;
             });
         });
 
