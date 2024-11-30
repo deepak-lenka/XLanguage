@@ -5,6 +5,7 @@ from config.config import XAI_API_KEY
 import logging
 from typing import Dict, Any
 from werkzeug.exceptions import HTTPException
+from services.conversation_manager import ConversationManager  # Import ConversationManager
 
 # Configure logging
 logging.basicConfig(
@@ -22,6 +23,9 @@ try:
 except Exception as e:
     logger.error(f"Failed to initialize XAI Service: {str(e)}")
     xai_service = None
+
+# Initialize conversation manager
+conversation_manager = ConversationManager(max_messages=10)  # Initialize conversation manager
 
 @app.route('/')
 def home():
@@ -53,14 +57,33 @@ def chat():
         if not user_message:
             return jsonify({'error': 'No message provided'}), 400
         
-        # Comprehensive system message for consistent response formatting
-        system_message = f"""You are a helpful assistant. Please ensure your responses are formatted as follows:
-- Use bullet points for lists.
-- Keep paragraphs short (2-3 sentences max).
-- Add line breaks between different sections.
-- Use markdown formatting where appropriate.
-- Respond directly and succinctly.
-Respond in {target_language}."""
+        # Update conversation language if changed
+        if target_language != conversation_manager.get_current_language():
+            conversation_manager.set_language(target_language)
+            # Add a language transition message with stronger instruction
+            system_message = f"""You are a multilingual AI assistant. IMPORTANT LANGUAGE INSTRUCTION: You MUST respond ONLY in {target_language}.
+DO NOT use any other language in your response. Even if the user's message is in a different language, you must respond in {target_language}.
+
+Format your responses as follows:
+- Use bullet points for lists
+- Keep paragraphs short (2-3 sentences max)
+- Add line breaks between different sections
+- Use markdown formatting where appropriate
+- Respond directly and succinctly
+
+Remember: Your response must be COMPLETELY in {target_language}."""
+        else:
+            system_message = f"""You are a multilingual AI assistant. IMPORTANT LANGUAGE INSTRUCTION: You MUST respond ONLY in {target_language}.
+DO NOT use any other language in your response. Even if the user's message is in a different language, you must respond in {target_language}.
+
+Format your responses as follows:
+- Use bullet points for lists
+- Keep paragraphs short (2-3 sentences max)
+- Add line breaks between different sections
+- Use markdown formatting where appropriate
+- Respond directly and succinctly
+
+Remember: Your response must be COMPLETELY in {target_language}."""
 
 
         
@@ -71,8 +94,15 @@ Respond in {target_language}."""
                 'choices': [{'message': {'content': 'Sorry, the AI service is temporarily down.'}}]
             }), 503
         
-        # Get AI response
-        response = xai_service.get_response(user_message, system_message)
+        # Get conversation history
+        conversation_history = conversation_manager.get_context()
+        
+        # Get AI response with conversation history
+        response = xai_service.get_response(
+            user_message=user_message,
+            conversation_history=conversation_history,
+            system_message=system_message
+        )
         
         # Error handling for different response types
         if isinstance(response, dict):
@@ -85,6 +115,11 @@ Respond in {target_language}."""
             
             # If response is a dictionary, attempt to extract content
             content = response.get('choices', [{}])[0].get('message', {}).get('content', '')
+            
+            # Store the conversation with language
+            conversation_manager.add_message(role="user", content=user_message, language=conversation_manager.get_current_language())
+            conversation_manager.add_message(role="assistant", content=content, language=conversation_manager.get_current_language())
+            
             return jsonify({
                 'choices': [{
                     'message': {
@@ -136,6 +171,6 @@ if __name__ == '__main__':
     
     app.run(
         host='0.0.0.0', 
-        port=int(os.environ.get('PORT', 5000)), 
+        port=5001, 
         debug=debug_mode
     )
