@@ -1,6 +1,7 @@
 import requests
 import logging
-from typing import Dict, Any, Optional, List
+from typing import Dict, Any, Optional
+from requests.exceptions import RequestException, Timeout
 
 class XAIService:
     """
@@ -75,8 +76,7 @@ class XAIService:
     
     def get_response(
         self, 
-        user_message: str,
-        conversation_history: List[Dict[str, str]] = None,
+        user_message: str, 
         system_message: str = "You are a helpful AI assistant.",
         model: str = "grok-beta",
         temperature: float = 0.7,
@@ -87,7 +87,6 @@ class XAIService:
         
         Args:
             user_message (str): User's input message
-            conversation_history (List[Dict[str, str]], optional): Previous messages
             system_message (str, optional): System context for response
             model (str, optional): AI model to use
             temperature (float, optional): Response creativity/randomness
@@ -97,20 +96,12 @@ class XAIService:
             Dict: Processed API response
         """
         try:
-            # Initialize messages with system message and language instruction
-            messages = [{"role": "system", "content": system_message}]
-            
-            # Add conversation history if provided
-            if conversation_history:
-                # Skip the first system message from history (it's outdated)
-                messages.extend(conversation_history[1:] if conversation_history and len(conversation_history) > 0 else [])
-            
-            # Add current user message
-            messages.append({"role": "user", "content": user_message})
-            
             # Prepare payload
             payload = {
-                "messages": messages,
+                "messages": [
+                    {"role": "system", "content": system_message},
+                    {"role": "user", "content": user_message}
+                ],
                 "model": model,
                 "temperature": temperature,
                 "stream": False
@@ -155,7 +146,7 @@ class XAIService:
                 }]
             }
         
-        except requests.exceptions.RequestException as e:
+        except RequestException as e:
             self.logger.error(f"Network error with X.AI API: {e}")
             return {
                 "error": f"Network error: {str(e)}",
