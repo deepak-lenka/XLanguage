@@ -1,0 +1,19 @@
+name = "xlanguage"
+main = "worker/index.js"
+compatibility_date = "2023-01-01"
+
+# Add module worker configuration
+compatibility_flags = ["nodejs_compat"]
+workers_dev = true
+
+[vars]
+WORKERS_RS_VERSION = "0.0.11"
+
+[[kv_namespaces]]
+binding = "XLANGUAGE_KV"
+id = "51198ad14a894238bf96047c02e19d7b"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "xlanguage"
+database_id = "9cd0af41-e232-4163-884c-226e92ec7583"
