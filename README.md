@@ -139,13 +139,6 @@ The application includes detailed logging for:
 - Conversation management
 - Server operations
 
-## 🚨 Error Handling
-
-- Bad request handling (400)
-- Internal server error handling (500)
-- API service initialization errors
-- Input validation
-
 ## 📝 License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
