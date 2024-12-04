@@ -131,14 +131,6 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 - Debug mode is configurable via environment settings
 - Comprehensive error handling to prevent information leakage
 
-## 📝 Logging
-
-The application includes detailed logging for:
-- API interactions
-- Error tracking
-- Conversation management
-- Server operations
-
 ## 📝 License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
