@@ -29,7 +29,7 @@ XLanguage is a sophisticated multilingual chat interface that leverages the powe
 
 ### Prerequisites
 - Python 3.7 or higher
-- pip (Python package manager)
+- pip requirement.txt
 - X.AI API key
 
 ### Installation
