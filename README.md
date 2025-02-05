@@ -109,13 +109,6 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 - Environment-specific configurations are supported
 - Proper error handling for missing API keys
 
-## 💡 Recent Updates
-
-- Added secure API key management using environment variables
-- Improved copy functionality with better text formatting
-- Enhanced error handling and logging
-- Added development environment configuration
-- Created `.env.example` for easier setup
 
 ## 🤝 Contributing
 
